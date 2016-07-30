@@ -1,0 +1,3 @@
+rootProject.name = 'PhotoPizza'
+
+include ':app'
