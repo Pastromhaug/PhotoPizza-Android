@@ -1,3 +1,5 @@
 <resources>
+
     <string name="app_name">PhotoPizza</string>
+    <string name="facebook_app_id">620711861421706</string>
 </resources>

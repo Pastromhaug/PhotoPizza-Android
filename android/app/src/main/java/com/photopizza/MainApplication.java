@@ -3,8 +3,9 @@ package com.photopizza;
 import android.app.Application;
 import android.util.Log;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
-import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -26,7 +27,16 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage()
       );
     }
+
   };
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    // Initialize the SDK before executing any other operations,
+    FacebookSdk.sdkInitialize(getApplicationContext());
+    AppEventsLogger.activateApp(this);
+  }
 
   @Override
   public ReactNativeHost getReactNativeHost() {
