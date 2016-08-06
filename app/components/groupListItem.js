@@ -9,7 +9,7 @@ export default class GroupListItem extends Component {
     render(){
         return (
             <TouchableHighlight underlayColor="#d9d9d9"
-                                onPress={()=> this.props._navigate('push','groupImages')}>
+                                onPress={()=> this.props._navigate('push','groupImages',{groupName:this.props.groupName})}>
                 <View style={{flex:1,flexDirection:'row',
                             borderBottomColor:'#cccccc', borderBottomWidth:1}}
                       onClick={() => {

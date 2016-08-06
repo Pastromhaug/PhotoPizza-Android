@@ -53,7 +53,8 @@ class _NavigationRoot extends Component {
                                _navigate={this._navigate}/>
             case 'groupImages':
                 return <GroupImages _navigateBack={this._navigateBack}
-                                    _navigate={this._navigate}/>
+                                    _navigate={this._navigate}
+                                    groupName={route.groupName}/>
         }
     }
     _navigateBack () {
@@ -97,6 +98,7 @@ function mapStateToProps (state) {
         navigation: state.navigation
     }
 }
+
 function mapDispatchToProps(dispatch) {
     return {
         dispatchPush: (route) => dispatch(actionPush(route)),
