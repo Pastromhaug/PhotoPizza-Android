@@ -3,6 +3,7 @@ package com.photopizza;
 import android.content.Intent;
 
 import com.facebook.react.ReactActivity;
+import com.oblador.vectoricons.VectorIconsPackage;
 
 public class MainActivity extends ReactActivity {
     /**

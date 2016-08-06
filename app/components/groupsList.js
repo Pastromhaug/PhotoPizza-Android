@@ -5,6 +5,7 @@
 import React, {Component} from 'react';
 import {View, Text, ListView, ToolbarAndroid, StyleSheet} from 'react-native';
 import GroupListItem from './groupListItem';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class Groups extends Component {
     constructor() {
@@ -25,7 +26,9 @@ export default class Groups extends Component {
     }
 
     _renderRow(rowData) {
-        return <GroupListItem groupName={rowData} groupDescription={rowData}/>
+        return <GroupListItem groupName={rowData} groupDescription={rowData}_
+                              _navigateBack={this.props._navigateBack}
+                              _navigate={this.props._navigate}/>
     }
     
     render() {
@@ -35,7 +38,7 @@ export default class Groups extends Component {
         };
         return (
             <View style={{flex:1}}>
-                <ToolbarAndroid title="Groups" titleColor='#e6e6e6' style={toolBarStye}/>
+                <Icon.ToolbarAndroid title="Groups" titleColor='#e6e6e6' style={toolBarStye}/>
                 <ListView style={{}}
                           dataSource={this.state.dataSource}
                           renderRow={(rowData) => this._renderRow(rowData)}/>

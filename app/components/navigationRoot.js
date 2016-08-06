@@ -6,7 +6,8 @@ import React, { Component } from 'react';
 import LoadingOnAppOpen from './loadingOnAppOpen';
 import Home from './home'
 import About from './about'
-import Groups from './groups';
+import Groups from './groupsList';
+import GroupImages from './groupImages';
 import LoginScreen from './login';
 
 import {
@@ -48,7 +49,11 @@ class _NavigationRoot extends Component {
             case 'login':
                 return <LoginScreen _navigateToGroups={() =>this._navigate('push','groups')}/>
             case 'groups':
-                return <Groups/>
+                return <Groups _navigateBack={this._navigateBack}
+                               _navigate={this._navigate}/>
+            case 'groupImages':
+                return <GroupImages _navigateBack={this._navigateBack}
+                                    _navigate={this._navigate}/>
         }
     }
     _navigateBack () {
