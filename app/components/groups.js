@@ -4,6 +4,7 @@
 
 import React, {Component} from 'react';
 import {View, Text, ListView, ToolbarAndroid, StyleSheet} from 'react-native';
+import GroupListItem from './groupListItem';
 
 export default class Groups extends Component {
     constructor() {
@@ -13,7 +14,8 @@ export default class Groups extends Component {
         });
         this.state = {
             dataSource: dataSource.cloneWithRows([
-                'John', 'Joel', 'James', 'Jimmy', 'Jackson', 'Jillian', 'Julie', 'Devin'
+                'John', 'Joel', 'James', 'Jimmy', 'Jackson', 'Jillian', 'Julie', 'Per Andre','Kari','Devin',
+                'Johannes'
             ])
         };
     }
@@ -23,15 +25,16 @@ export default class Groups extends Component {
     }
 
     _renderRow(rowData) {
-        return <Text>{rowData}</Text>
+        return <GroupListItem groupName={rowData} groupDescription={rowData}/>
     }
     
     render() {
         const toolBarStye = {height:56,backgroundColor: "rgb(97,71,158)"};
         return (
-            <View styoe={{alignItems:'stretch'}}>
+            <View style={{flex:1}}>
                 <ToolbarAndroid title="Groups" titleColor='#e6e6e6' style={toolBarStye}/>
-                <ListView dataSource={this.state.dataSource}
+                <ListView style={{}}
+                          dataSource={this.state.dataSource}
                           renderRow={(rowData) => this._renderRow(rowData)}/>
             </View>
         )
