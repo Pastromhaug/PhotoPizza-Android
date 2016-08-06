@@ -11,8 +11,7 @@ const initialState = {
     index: 0,
     key: 'root',
     routes: [{
-        key: 'login',
-        title: 'Login'
+        key: 'loading'
     }]
 };
 

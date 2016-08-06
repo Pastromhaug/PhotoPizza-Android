@@ -18,26 +18,41 @@ const {
 
 class Login extends Component{
     render() {
+        const loggedInView = {
+            type: 'push',
+            route: {
+                key: 'groups',
+                title: 'Home'
+            }
+        };
+        var accessToken = AccessToken.getCurrentAccessToken().then( (data) => {
+            console.log('accessToken: ');
+            console.log(data);
+            if (accessToken != null) {
+                console.log('navigating to next screen');
+                this._navigate(loggedInView);
+            }
+        });
+
         return (
             <View>
                 <LoginButton
                     publishPermissions={["publish_actions"]}
                     onLoginFinished={
-            (error, result) => {
-                if (error) {
-                    alert("login has error: " + result.error);
-                } else if (result.isCancelled) {
-                    alert("login is cancelled.");
-                } else {
-                    AccessToken.getCurrentAccessToken().then(
-                        (data) => {
-                            this.props.navigateToNext();
+                        (error, result) => {
+                            if (error) {
+                                alert("login has error: " + result.error);
+                            } else if (result.isCancelled) {
+                                alert("login is cancelled.");
+                            } else {
+                                AccessToken.getCurrentAccessToken().then(
+                                    (data) => {
+                                        this.props.navigateToGroups();
+                                    }
+                                )
+                            }
                         }
-                    )
-                }
-            }
-          }
-                    onLogoutFinished={() => alert("logout.")}/>
+                    }/>
             </View>
         );
     }
@@ -49,7 +64,7 @@ export default class LoginScreen extends Component {
         const nextRoute = {
             type: 'push',
             route: {
-                key: 'home',
+                key: 'groups',
                 title: 'Home'
             }
         };
@@ -65,7 +80,7 @@ export default class LoginScreen extends Component {
                     Double tap R on your keyboard to reload,{'\n'}
                     Shake or press menu button for dev menu
                 </Text>
-                <Login navigateToNext={() => this.props._handleNavigate(nextRoute)}/>
+                <Login navigateToNext={() => this.props._navigate(nextRoute)}/>
             </View>
         );
     }

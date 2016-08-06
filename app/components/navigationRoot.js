@@ -2,9 +2,11 @@
  * Created by perandre on 05.08.16.
  */
 
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import LoadingOnAppOpen from './loadingOnAppOpen';
 import Home from './home'
 import About from './about'
+import Groups from './groups';
 import LoginScreen from './login';
 
 import {
@@ -16,44 +18,59 @@ const {
     CardStack: NavigationCardStack
 } = NavigationExperimental;
 
+const FBSDK = require('react-native-fbsdk');
+const {AccessToken} = FBSDK;
+
+
+
 class _NavigationRoot extends Component {
     constructor (props) {
         super(props);
-        this._renderScene = this._renderScene.bind(this)
-        this._handleBackAction = this._handleBackAction.bind(this)
+        this._renderScene = this._renderScene.bind(this);
+        this._navigate = this._navigate.bind(this);
+        this._navigateBack = this._navigateBack.bind(this);
+
+        
+
     }
     componentDidMount () {
-        BackAndroid.addEventListener('hardwareBackPress', this._handleBackAction)
+        BackAndroid.addEventListener('hardwareBackPress', this._navigateBack)
     }
     componentWillUnmount () {
-        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackAction)
+        BackAndroid.removeEventListener('hardwareBackPress', this._navigateBack)
     }
     _renderScene (props) {
         const { route } = props.scene;
         switch(route.key) {
+            case 'loading':
+                return <LoadingOnAppOpen _navigateToGroups={() =>this._navigate('push','groups')}
+                                        _navigateToLogin={() => this._navigate('push','login')}/>
             case 'home':
-                return <Home _handleNavigate={this._handleNavigate.bind(this)} />;
+                return <Home _navigate={this._navigate} />;
             case 'about':
-                return <About _goBack={this._handleBackAction.bind(this)} />;
+                return <About _navigateBack={this._navigateBack} />;
             case 'login':
-                return <LoginScreen _handleNavigate={this._handleNavigate.bind(this)}/>
+                return <LoginScreen _navigateToGroups={() =>this._navigate('push','groups')}/>
+            case 'groups':
+                return <Groups/>
         }
     }
-    _handleBackAction () {
+    _navigateBack () {
         if (this.props.navigation.index === 0) {
             return false
         }
-        this.props.dispatchPop()
+        this.props.dispatchPop();
         return true
     }
-    _handleNavigate (action) {
-        switch (action.type) {
+    _navigate (type, routeName, extras = {}) {
+        const route = Object.assign({},{key: routeName}, extras);
+        switch (type) {
             case 'push':
-                this.props.dispatchPush(action.route);
+                this.props.dispatchPush(route);
                 return true;
             case 'back':
             case 'pop':
-                return this._handleBackAction();
+                return this._navigateBack();
             default:
                 return false
         }
@@ -63,7 +80,7 @@ class _NavigationRoot extends Component {
             <NavigationCardStack
                 direction='vertical'
                 navigationState={this.props.navigation}
-                onNavigate={this._handleNavigate.bind(this)}
+                onNavigate={this._navigate.bind(this)}
                 renderScene={this._renderScene} />
         )
     }

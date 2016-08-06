@@ -10,18 +10,10 @@ import {
 } from 'react-native'
 import Button from './button'
 
-const route = {
-    type: 'push',
-    route: {
-        key: 'about',
-        title: 'About'
-    }
-};
-
-const Home = ({_handleNavigate}) => (
+const Home = ({_navigate}) => (
     <View style={styles.container}>
         <Text style={styles.title}>Home</Text>
-        <Button onPress={() => _handleNavigate(route)} label='Go To About' />
+        <Button onPress={() => _navigate('push','about',{title: 'About'})} label='Go To About' />
     </View>
 )
 

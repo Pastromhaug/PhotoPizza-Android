@@ -10,10 +10,10 @@ import {
 } from 'react-native'
 import Button from './button'
 
-const About = ({_goBack}) => (
+const About = ({_navigateBack}) => (
     <View style={styles.container}>
         <Text style={styles.title}>About</Text>
-        <Button onPress={_goBack} label='Go Back' />
+        <Button onPress={_navigateBack} label='Go Back' />
     </View>
 )
 
