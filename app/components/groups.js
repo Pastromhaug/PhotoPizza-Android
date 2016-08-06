@@ -29,7 +29,10 @@ export default class Groups extends Component {
     }
     
     render() {
-        const toolBarStye = {height:56,backgroundColor: "rgb(97,71,158)"};
+        const toolBarStye = {height:56,
+            backgroundColor: "rgb(97,71,158)",
+            elevation:5
+        };
         return (
             <View style={{flex:1}}>
                 <ToolbarAndroid title="Groups" titleColor='#e6e6e6' style={toolBarStye}/>

@@ -18,10 +18,6 @@ const {
     CardStack: NavigationCardStack
 } = NavigationExperimental;
 
-const FBSDK = require('react-native-fbsdk');
-const {AccessToken} = FBSDK;
-
-
 
 class _NavigationRoot extends Component {
     constructor (props) {
@@ -78,7 +74,6 @@ class _NavigationRoot extends Component {
     render () {
         return (
             <NavigationCardStack
-                direction='vertical'
                 navigationState={this.props.navigation}
                 onNavigate={this._navigate.bind(this)}
                 renderScene={this._renderScene} />
