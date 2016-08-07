@@ -4,9 +4,11 @@
 
 import { combineReducers } from 'redux'
 import navigation from './navigation'
+import auth from './auth'
 
 const rootReducer = combineReducers({
-    navigation
+    navigation,
+    auth
 });
 
 export default rootReducer

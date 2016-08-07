@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import LoadingOnAppOpen from './loadingOnAppOpen';
 import Home from './home'
 import About from './about'
-import Groups from './groupsList';
+import GroupsList from './groupsList';
 import GroupImages from './groupImages';
 import LoginScreen from './login';
 
@@ -27,30 +27,31 @@ class _NavigationRoot extends Component {
         this._navigate = this._navigate.bind(this);
         this._navigateBack = this._navigateBack.bind(this);
 
-        
-
     }
     componentDidMount () {
         BackAndroid.addEventListener('hardwareBackPress', this._navigateBack)
     }
+
     componentWillUnmount () {
         BackAndroid.removeEventListener('hardwareBackPress', this._navigateBack)
     }
+
+
     _renderScene (props) {
         const { route } = props.scene;
         switch(route.key) {
             case 'loading':
-                return <LoadingOnAppOpen _navigateToGroups={() =>this._navigate('push','groups')}
-                                        _navigateToLogin={() => this._navigate('push','login')}/>
+                return <LoadingOnAppOpen _navigate={this._navigate}/>
             case 'home':
                 return <Home _navigate={this._navigate} />;
             case 'about':
                 return <About _navigateBack={this._navigateBack} />;
             case 'login':
-                return <LoginScreen _navigateToGroups={() =>this._navigate('push','groups')}/>
+                return <LoginScreen _navigate={this._navigate}/>
             case 'groups':
-                return <Groups _navigateBack={this._navigateBack}
-                               _navigate={this._navigate}/>
+                return <GroupsList _navigateBack={this._navigateBack}
+                                    _navigate={this._navigate}
+                                    firDatabase={route.firDatabase}/>
             case 'groupImages':
                 return <GroupImages _navigateBack={this._navigateBack}
                                     _navigate={this._navigate}
@@ -91,11 +92,12 @@ class _NavigationRoot extends Component {
 
 
 import { connect } from 'react-redux'
-import { actionPush, actionPop } from '../actions/navigation';
+import { actionPush, actionPop } from '../actions/navigation'
 
 function mapStateToProps (state) {
     return {
-        navigation: state.navigation
+        navigation: state.navigation,
+        facebookToken: state.auth.facebookToken
     }
 }
 

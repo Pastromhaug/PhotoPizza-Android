@@ -16,21 +16,21 @@ const {
     AccessToken
 } = FBSDK;
 
-class Login extends Component{
+import FIREBASE from '../js/firebase';
+import * as firebase from 'firebase';
+const auth = firebase.auth();
+const provider = firebase.auth.FacebookAuthProvider;
+
+class _Login extends Component{
     render() {
-        const loggedInView = {
-            type: 'push',
-            route: {
-                key: 'groups',
-                title: 'Home'
-            }
-        };
         var accessToken = AccessToken.getCurrentAccessToken().then( (data) => {
             console.log('accessToken: ');
             console.log(data);
+            console.log(data.accessToken);
             if (accessToken != null) {
                 console.log('navigating to next screen');
-                this._navigate(loggedInView);
+                this.props.dispatchFacebookToken(data.accessToken);
+                this.props._navigateToGroups();
             }
         });
 
@@ -47,7 +47,26 @@ class Login extends Component{
                             } else {
                                 AccessToken.getCurrentAccessToken().then(
                                     (data) => {
-                                        this.props.navigateToGroups();
+                                        if (data.accessToken != null){
+                                            console.log('accesstoken caught');
+                                            const credential = provider.credential(data.accessToken);
+                                            auth.signInWithCredential(credential)
+                                                .then( (result) => {
+                                                    console.log('signed in with firebase');
+                                                    console.log(result);
+                                                    this.props._navigate('push','groups',{firDatabase:FIREBASE.database()});
+                                                })
+                                                .catch((error) => {
+                                                    console.log('firebase sign in error');
+                                                    console.log(error);
+                                                });
+                                        }
+                                        else {
+                                            console.log('accesstoken caught, but is null') ;
+                                        }
+                                    }).catch(
+                                    () => {
+                                        console.log('accesstoken not caught') ;
                                     }
                                 )
                             }
@@ -57,6 +76,23 @@ class Login extends Component{
         );
     }
 };
+
+import {connect} from 'react-redux';
+import {actionFacebookToken} from '../actions/auth'
+
+function mapStateToProps() {return {}};
+function mapDispatchToProps(disptach) {
+    return {
+        dispatchFacebookToken(token) {
+            disptach(actionFacebookToken(token));
+        }
+    }
+}
+
+const Login = connect (
+    mapStateToProps,
+    mapDispatchToProps
+)(_Login);
 
 export default class LoginScreen extends Component {
 
@@ -80,7 +116,7 @@ export default class LoginScreen extends Component {
                     Double tap R on your keyboard to reload,{'\n'}
                     Shake or press menu button for dev menu
                 </Text>
-                <Login navigateToNext={() => this.props._navigate(nextRoute)}/>
+                <Login _navigate={this.props._navigate}/>
             </View>
         );
     }
