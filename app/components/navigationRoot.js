@@ -39,6 +39,8 @@ class _NavigationRoot extends Component {
 
     _renderScene (props) {
         const { route } = props.scene;
+        console.log('route');
+        console.log(route);
         switch(route.key) {
             case 'loading':
                 return <LoadingOnAppOpen _navigate={this._navigate}/>

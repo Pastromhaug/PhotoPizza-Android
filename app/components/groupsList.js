@@ -7,8 +7,8 @@ import {View, Text, ListView, ToolbarAndroid, StyleSheet} from 'react-native';
 import GroupListItem from './groupListItem';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default class Groups extends Component {
-    constructor() {
+class _GroupsList extends Component {
+    constructor(props) {
         super();
         const dataSource = new ListView.DataSource({
             rowHasChanged: (r1, r2) => this._rowHasChanged(r1, r2)
@@ -19,6 +19,19 @@ export default class Groups extends Component {
                 'Johannes'
             ])
         };
+        this.groupsRef = props.firDatabase.ref('users/' + props.auth.firebaseToken + '/groups');
+        this.groupsRef.on('value', (snapshot) => {
+            let groupNames = Object.values(snapshot.val());
+            console.log(groupNames);
+            for (var idx in groupNames) {
+                let groupName = groupNames[idx];
+                console.log(groupName);
+                specificGroupRef = props.firDatabase.ref('groups/' + groupName);
+                specificGroupRef.on('value', (snapshot) => {
+                    console.log(snapshot.val())
+                })
+            }
+        });
     }
 
     _rowHasChanged(r1, r2){
@@ -45,7 +58,18 @@ export default class Groups extends Component {
             </View>
         )
     }
-
-
 }
 
+import {connect} from 'react-redux';
+
+function mapStateToProps(state) {
+    return {
+        auth: state.auth
+    }
+};
+
+const GroupsList = connect (
+    mapStateToProps
+)(_GroupsList);
+
+export default GroupsList

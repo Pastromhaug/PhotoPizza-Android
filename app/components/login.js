@@ -54,6 +54,7 @@ class _Login extends Component{
                                                 .then( (result) => {
                                                     console.log('signed in with firebase');
                                                     console.log(result);
+                                                    this.props.dispatchUpdateAuth(data.accessToken, result.uid);
                                                     this.props._navigate('push','groups',{firDatabase:FIREBASE.database()});
                                                 })
                                                 .catch((error) => {
@@ -65,8 +66,9 @@ class _Login extends Component{
                                             console.log('accesstoken caught, but is null') ;
                                         }
                                     }).catch(
-                                    () => {
+                                    (error) => {
                                         console.log('accesstoken not caught') ;
+                                        console.log(error);
                                     }
                                 )
                             }
@@ -75,16 +77,16 @@ class _Login extends Component{
             </View>
         );
     }
-};
+}
 
 import {connect} from 'react-redux';
-import {actionFacebookToken} from '../actions/auth'
+import {actionUpdateAuth} from '../actions/auth';
 
-function mapStateToProps() {return {}};
+function mapStateToProps() {return {}}
 function mapDispatchToProps(disptach) {
     return {
-        dispatchFacebookToken(token) {
-            disptach(actionFacebookToken(token));
+        dispatchUpdateAuth(facebookToken,firebaseToken) {
+            disptach(actionUpdateAuth(facebookToken, firebaseToken));
         }
     }
 }

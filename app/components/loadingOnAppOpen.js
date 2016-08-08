@@ -16,7 +16,7 @@ import * as firebase from 'firebase';
 const auth = firebase.auth();
 const provider = firebase.auth.FacebookAuthProvider;
 
-export default class LoadingOnAppOpen extends Component {
+class _LoadingOnAppOpen extends Component {
     constructor(props) {
         super(props);
         console.log('LoadingAppOnOpen constructor');
@@ -28,7 +28,7 @@ export default class LoadingOnAppOpen extends Component {
                     auth.signInWithCredential(credential)
                         .then( (result) => {
                             console.log('signed in with firebase');
-                            console.log(result);
+                            this.props.dispatchUpdateAuth(data.accessToken, result.uid);
                             this.props._navigate('push','groups',{firDatabase:FIREBASE.database()});
                         })
                         .catch((error) => {
@@ -46,7 +46,6 @@ export default class LoadingOnAppOpen extends Component {
                 this.props._navigate('push','login');
             }
         )
-        
     }
 
     render() {
@@ -55,3 +54,21 @@ export default class LoadingOnAppOpen extends Component {
         )
     }
 }
+import {connect} from 'react-redux';
+import {actionUpdateAuth} from '../actions/auth';
+
+function mapStateToProps() {return {}}
+function mapDispatchToProps(disptach) {
+    return {
+        dispatchUpdateAuth(facebookToken,firebaseToken) {
+            disptach(actionUpdateAuth(facebookToken, firebaseToken));
+        }
+    }
+}
+
+const LoadingOnAppOpen =  connect (
+    mapStateToProps,
+    mapDispatchToProps
+)(_LoadingOnAppOpen);
+
+export default LoadingOnAppOpen;
