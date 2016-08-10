@@ -3,34 +3,22 @@
  */
 
 import React, {Component} from 'react';
-import {View, Text, ListView, ToolbarAndroid, StyleSheet} from 'react-native';
+import {View, Text, ListView} from 'react-native';
 import GroupListItem from './groupListItem';
-import Icon from 'react-native-vector-icons/Ionicons';
+import FIREBASE from '../js/firebase';
 
 class _GroupsList extends Component {
     constructor(props) {
-        super();
-        const dataSource = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => this._rowHasChanged(r1, r2)
+        super(props);
+        this._rowHasChanged.bind(this);
+        this._renderRow.bind(this);
+        this.ds = new ListView.DataSource( {
+            rowHasChanged: this._rowHasChanged
         });
-        this.state = {
-            dataSource: dataSource.cloneWithRows([
-                'John', 'Joel', 'James', 'Jimmy', 'Jackson', 'Jillian', 'Julie', 'Per Andre','Kari','Devin',
-                'Johannes'
-            ])
-        };
-        this.groupsRef = props.firDatabase.ref('users/' + props.auth.firebaseToken + '/groups');
+        this.groupsRef = FIREBASE.database().ref('users/' + props.auth.firebaseToken + '/groups');
         this.groupsRef.on('value', (snapshot) => {
-            let groupNames = Object.values(snapshot.val());
-            console.log(groupNames);
-            for (var idx in groupNames) {
-                let groupName = groupNames[idx];
-                console.log(groupName);
-                specificGroupRef = props.firDatabase.ref('groups/' + groupName);
-                specificGroupRef.on('value', (snapshot) => {
-                    console.log(snapshot.val())
-                })
-            }
+            let groupIds = Object.values(snapshot.val());
+            props.dispatchUpdateGroupIds(groupIds);
         });
     }
 
@@ -39,37 +27,43 @@ class _GroupsList extends Component {
     }
 
     _renderRow(rowData) {
-        return <GroupListItem groupName={rowData} groupDescription={rowData}_
+        return <GroupListItem groupId={rowData}
                               _navigateBack={this.props._navigateBack}
                               _navigate={this.props._navigate}/>
     }
     
     render() {
-        const toolBarStye = {height:56,
-            backgroundColor: "rgb(97,71,158)",
-            elevation:5
-        };
+        let dataSource = this.ds.cloneWithRows(this.props.groupIds);
         return (
             <View style={{flex:1}}>
-                <Icon.ToolbarAndroid title="Groups" titleColor='#e6e6e6' style={toolBarStye}/>
-                <ListView style={{}}
-                          dataSource={this.state.dataSource}
-                          renderRow={(rowData) => this._renderRow(rowData)}/>
+                <ListView dataSource={dataSource}
+                          renderRow={this._renderRow.bind(this)}
+                          enableEmptySections={true}/>
             </View>
         )
     }
 }
 
 import {connect} from 'react-redux';
+import {actionUpdateGroupIds} from '../actions/groupsList';
 
 function mapStateToProps(state) {
     return {
-        auth: state.auth
+        auth: state.auth,
+        groupIds: state.groupsList.groupIds
     }
-};
+}
+function mapDispatchToProps(dispatch) {
+    return {
+        dispatchUpdateGroupIds(groupIds) {
+            dispatch(actionUpdateGroupIds(groupIds))
+        }
+    }
+}
 
 const GroupsList = connect (
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(_GroupsList);
 
 export default GroupsList

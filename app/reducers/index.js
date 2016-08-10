@@ -5,10 +5,12 @@
 import { combineReducers } from 'redux'
 import navigation from './navigation'
 import auth from './auth'
+import groupsList from './groupsList'
 
 const rootReducer = combineReducers({
     navigation,
-    auth
+    auth,
+    groupsList
 });
 
 export default rootReducer

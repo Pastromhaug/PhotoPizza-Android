@@ -4,8 +4,27 @@
 
 import React, {Component} from 'react';
 import {View, TouchableHighlight, Text, Image} from 'react-native';
+import FIREBASE from '../js/firebase';
 
 export default class GroupListItem extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: "",
+            update: "",
+            imageSrc: ""
+        }
+        let groupRef = FIREBASE.database().ref('groups/' + props.groupId);
+        groupRef.on('value', (snapshot) => {
+            let groupProps = snapshot.val();
+            this.setState({
+                name: groupProps.groupName,
+                update: groupProps.update,
+                imageSrc: groupProps.avatarImgId
+            })
+        } )
+    }
+
     render(){
         return (
             <TouchableHighlight underlayColor="#d9d9d9"
@@ -20,8 +39,8 @@ export default class GroupListItem extends Component {
                            source={require("../images/nice.jpg")}/>
                     <View style={{flex:1,flexDirection:'column',
                           justifyContent:'space-around', padding:5, paddingLeft:10}}>
-                        <Text style={{fontSize:16,height:25,color:'#404040'}}>{this.props.groupName}</Text>
-                        <Text style={{fontSize:12}}>{this.props.groupDescription}</Text>
+                        <Text style={{fontSize:16,height:25,color:'#404040'}}>{this.state.name}</Text>
+                        <Text style={{fontSize:12}}>{this.state.update}</Text>
                     </View>
                 </View>
             </TouchableHighlight>
